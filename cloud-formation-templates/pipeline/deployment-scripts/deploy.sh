@@ -9,9 +9,9 @@ GitHubURL="https://github.com/abyayaPrasad/cicd-cloud-aws.git" # Github url
 KMSKey="" # KMS key arn - create KMS key add ARN here
 BuildSpec="./cloud-formation-templates/pipeline/deployment-scripts/builspec-nonprod.yml" # Buildspec file name
 ResourceTemplate="./cloud-formation-templates/pipeline/resources/lambda-function.yml" # Absolute path from repo
-PreProdCICDBucket="" # Prod s3 bucket name
-ProdCICDBucket=""
+PreProdCICDBucket="sc-data-orch-test-preprod" # Prod s3 bucket name
+ProdCICDBucket="sc-data-orch-test-preprod"
 stage_name="dev" 
 
 
-aws cloudformation deploy --no-verify-ssl --stack-name "${ApplicationName}-codebuild-promotion-${GitRepo}" --template-file ${CICDTemplate} --region ${Region} --role-arn arn:aws-us-gov:iam::279337964555:role/av-shoreline-cloudformation-promotion --parameter-overrides GitHubURL=${GitHubURL} KMSKey=${KMSKey} BuildSpec=${BuildSpec} Template=${ResourceTemplate} PreProdCICDBucket=${PreProdCICDBucket} ProdCICDBucket=${ProdCICDBucket} FileS3Prefix=${ApplicationName}-${GitRepo} Manifest=${Manifest}
+aws cloudformation deploy --no-verify-ssl --stack-name "${ApplicationName}-codebuild-promotion-${GitRepo}" --template-file ${CICDTemplate} --region ${Region} --role-arn arn:aws:iam::767400217432:role/sc-cloudformation-deploy-role --parameter-overrides GitHubURL=${GitHubURL} KMSKey=${KMSKey} BuildSpec=${BuildSpec} Template=${ResourceTemplate} PreProdCICDBucket=${PreProdCICDBucket} ProdCICDBucket=${ProdCICDBucket} FileS3Prefix=${ApplicationName}-${GitRepo} Manifest=${Manifest}
