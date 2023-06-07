@@ -1,0 +1,56 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      python: 3.9
+    commands:
+      - SOURCE_VERSION=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - pip3 install --upgrade pip
+      - pip3 install --upgrade awscli aws-sam-cli
+      - pip3 install --force-reinstall "cryptography==38.0.4"
+      - pip3 install pylint
+      - pip3 install moto
+      - pip3 install pandas
+      - pip3 install pytest
+      - pip3 install pytest-cov
+  build:
+    commands:
+       - >-
+         echo "Executing actions for ${STAGE_NAME}"
+
+         if [ "${STAGE_NAME}" = "dev" ]; then
+           echo "starting sam build"
+           sam build --template $TEMPLATE --manifest $MANIFEST
+
+           echo "starting sam package"
+           sam package -t $TEMPLATE --output-template-file ${GIT_REPO}.yaml --s3-bucket $CICD_BUCKET --s3-prefix ${APP_PREFIX}-${GIT_REPO}/${STAGE_NAME}
+
+           cp ${GIT_REPO}.yaml ${GIT_REPO}-${SOURCE_VERSION}.yaml
+
+           zip -r internal.zip ${GIT_REPO}.yaml
+           zip -r versioned.zip ${GIT_REPO}-${SOURCE_VERSION}.yaml
+
+           aws s3 cp internal.zip s3://${CICD_BUCKET}/${APP_PREFIX}-${GIT_REPO}/${STAGE_NAME}/internal.zip --sse aws:kms --sse-kms-key-id ${KEY_ID}
+           aws s3 cp versioned.zip s3://${CICD_BUCKET}/${APP_PREFIX}-${GIT_REPO}/${STAGE_NAME}/versioned.zip --sse aws:kms --sse-kms-key-id ${KEY_ID}
+
+           aws s3 sync src/ s3://${CICD_BUCKET}/${APP_PREFIX}-${GIT_REPO}/${STAGE_NAME}/src/ --exclude "" #"file names that you dont want sync from s3"
+
+           sam deploy --region ${AWS_REGION} --stack-name ${APP_PREFIX}-${GIT_REPO}-${STAGE_NAME} --template-file ${GIT_REPO}.yaml --capabilities CAPABILITY_AUTO_EXPAND --role-arn arn:${ARN_PARTITION}:iam::${ACCT_ID}:role/av-${APP_PREFIX}-cloudformation-deployer --parameter-overrides GitRepo=${GIT_REPO} StageName=${STAGE_NAME} AccountType=${ACCOUNT_TYPE} LandingZone=${LANDING_ZONE} CDCClusterName=${CDC_CLUSTER_NAME} TruncateLoadClusterName=${TRUNCATE_CLUSTER_NAME} LogBucket=${LOG_BUCKET} BootStrapScriptBucket=${CICD_BUCKET} BootStrapScriptPrefix=${APP_PREFIX}-${GIT_REPO}/${STAGE_NAME}/emr-bootstrap BootStrapScriptName=${BOOTSTRAP_SCRIPT_NAME} TwoFAAccessGroup=${TWO_FA_ACCESS_GROUP} AutoScalingRole=${AUTO_SCALING_ROLE} EMRFailureLambdaARN=${EMR_FAILURE_LAMBDA_ARN} SNSTopicArn=${SNS_TOPIC_ARN} SecurityGroupParameterName=${SECURITY_GROUP_PARAMETER_NAME} SSMParameterStoreAccessibility=${SSM_PARAM_ACCESSIBILITY} --no-fail-on-empty-changeset
+
+         elif [ "${STAGE_NAME}" = "prod" ]; then
+           echo "copy files to prod folder"
+
+           sam build --template $TEMPLATE --manifest $MANIFEST
+
+           echo "starting sam package"
+           sam package -t $TEMPLATE --output-template-file ${GIT_REPO}.yaml --s3-bucket $CICD_BUCKET --s3-prefix ${APP_PREFIX}-${GIT_REPO}/prod
+
+           zip -r internal.zip ${GIT_REPO}.yaml
+           zip -r versioned.zip ${GIT_REPO}-${SOURCE_VERSION}.yaml
+
+           aws s3 cp internal.zip s3://${CICD_BUCKET}/${APP_PREFIX}-${GIT_REPO}/${STAGE_NAME}/internal.zip
+
+           aws s3 sync s3://${CICD_BUCKET}/${APP_PREFIX}-${GIT_REPO}/dev/src/ s3://${CICD_BUCKET}/${APP_PREFIX}-${GIT_REPO}/${STAGE_NAME}/src/
+
+           aws s3 cp ${PROD_BUILD_SPEC} s3://${CICD_BUCKET}/${APP_PREFIX}-${GIT_REPO}/${STAGE_NAME}/ --sse aws:kms --sse-kms-key-id ${KEY_ID}
+         fi

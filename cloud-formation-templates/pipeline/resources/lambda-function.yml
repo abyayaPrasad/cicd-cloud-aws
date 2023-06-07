@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "CloudFormation Template to deploy Lambda functions"
+
+
+Parameters: 
+  Runtime:
+    Description: The identifier of the function's runtime. Runtime is required if the deployment package is a .zip file archive.
+    Type: String
+    Default: python3.9
+    AllowedValues: ["dotnet6", "dotnetcore1.0", "dotnetcore2.0","dotnetcore2.1","dotnetcore3.1","go1.x", "java11" , "java8" ,"java8.al2" ,"nodejs","nodejs10.x", "nodejs12.x" , "nodejs14.x" , "nodejs16.x" , "nodejs18.x" , "nodejs4.3" ,"nodejs4.3-edge ","nodejs6.10 ", "nodejs8.10","provided","provided.al2", "python2.7", "python3.6", "python3.7", "python3.8" ,"python3.9", "ruby2.5" ,"ruby2.7"]
+  MemorySize:
+    Description: The amount of memory available to the function at runtime.
+    Type: Number
+    Default: 128
+    MinValue: 128
+    MaxValue: 10240
+  PackageType: 
+    Description: The type of deployment package. Set to Image for container image and set Zip for .zip file archive.
+    Type: String
+    Default: Zip
+    AllowedValues: ["Image","Zip"] 
+  Architectures:
+    Description: The instruction set architecture that the function supports. Enter a string array with one of the valid values
+    Type: String
+    Default: x86_64
+    AllowedValues: ["arm64","x86_64"] 
+
+
+Resources:
+  MyLambdaFunction1:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Architectures: !Ref Architectures
+      FunctionName: "MyLambdaFunction1"
+      CodeUri: s3://aerospace.wissen.com/sc-fn1-get-funcation-names.zip
+      Description: This lambda will query the redshift database
+      Runtime: "python3.9"
+      Handler: "lambda_function1.handler"
+      MemorySize: !Ref MemorySize
+      PackageType: !Ref PackageType
+      Timeout: 60
+      Role: !GetAtt LambdaExecutionRole.Arn

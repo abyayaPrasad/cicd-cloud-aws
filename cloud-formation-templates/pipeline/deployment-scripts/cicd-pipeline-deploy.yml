@@ -1,0 +1,156 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Creates a CodeBuild project *in NonProd*.  Source is GitHub.
+Parameters:
+  ApplicationPrefix:
+    Description: The name of the application.
+    Type: String
+    Default: sc
+  UAI:
+    Description: UAI of the product.
+    Type: String
+    Default: 'Billing_Tag'
+  GitHubURL:
+    Description: HTTPS URL for GitHub Enterprise Repository
+    Type: String
+  Runtime:
+    Description: Lambda runtime (nodejs, java8, python3.6, python3.7).
+    Type: String
+    AllowedValues: [nodejs, java8, python3.6, python3.7, ubuntu, amznlinux]
+    Default: ubuntu
+    ConstraintDescription: Parameter 'Runtime' must be one of the following values - nodejs, java8 or python3.6 or python3.7
+  NotificationEmail:
+    Description: Pipeline failure events will be published to an SNS topic.  Enter your the email/distribution list that is notified.
+    Type: String
+    Default: @ge.com
+    ConstraintDescription: Malformed input-Parameter NotificationEmail email address must end in "@ge.com".
+  KMSKey:
+    Description: Key for the team. Secures their artifacts in S3 Bucket used for CICD.
+    Type: String
+  NonProdBuildSpec:
+    Description: Buildspec file to use for the nonprod codebuild pipeline.
+    Type: String
+  ComputeType:
+    Description: Codebuild environment compute type.
+    Type: String
+    AllowedValues:
+      - BUILD_GENERAL1_SMALL
+      - BUILD_GENERAL1_MEDIUM
+      - BUILD_GENERAL1_LARGE
+    Default: BUILD_GENERAL1_SMALL
+    ConstraintDescription: ComputeType must be one of the following - BUILD_GENERAL1_SMALL, BUILD_GENERAL1_MEDIUM, BUILD_GENERAL1_LARGE.
+  TimeoutInMinutes:
+    Description: Codebuild timeout in minutes.
+    Type: Number
+    Default: 10
+  Template:
+    Description: Template file name in your repository.
+    Type: String
+  Manifest:
+    Description: Requirements file name in your repository.
+    Type: String
+  CICDBucket:
+    Description: Identifies the account portion of the PREPROD cicd bucket. This value, plus '-${ApplicationPrefix}-cicd' is the cicd bucket.
+    Type: String
+  ProdBuildSpec:
+    Description: Buildspec file to use for the prod codebuild pipeline.
+    Type: String
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "Build Environment"
+        Parameters:
+          - Runtime
+
+Mappings:
+  ImageMap:
+    nodejs:
+      Image: aws/codebuild/nodejs:8.11.0
+    java8:
+      Image: aws/codebuild/java:openjdk-8
+    python3.6:
+      Image: aws/codebuild/python:3.6.5
+    python3.7:
+      Image: aws/codebuild/python:3.7.1
+    ubuntu:
+      Image: aws/codebuild/standard:4.0
+    amznlinux:
+      Image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
+Resources:
+  BuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Join ["-", [!Sub '${ApplicationPrefix}', !Select [4, !Split ["/", !Ref GitHubURL]], "cicd-pipeline"]]
+      Description: Codebuild project that builds, validates, tests and packages lambda function for CI/CD pipeline.
+      Tags:
+        - Key: uai
+          Value: !Ref UAI
+        - Key: product
+          Value: !Ref ApplicationPrefix
+        - Key: contact
+          Value: !Ref NotificationEmail
+      ServiceRole:
+        !Join [
+          "",
+          [
+            "arn:",!Ref "AWS::Partition",":iam::",
+            !Ref "AWS::AccountId",
+            ":role/",
+            !Sub "${ApplicationPrefix}",
+            "-codebuild",
+          ],
+        ]
+      EncryptionKey: !Ref KMSKey
+      Source:
+        Type: GITHUB_ENTERPRISE
+        Location: !Ref GitHubURL
+        GitCloneDepth: 1
+        ReportBuildStatus: true
+        BuildSpec: !Ref NonProdBuildSpec
+      Artifacts:
+        Type: NO_ARTIFACTS
+    #   VpcConfig:
+    #     SecurityGroupIds:
+    #       - '{{resolve:ssm:/shared/web-tier-security-group-id:1}}'
+    #     Subnets:
+    #       - '{{resolve:ssm:/shared/internal-subnet-1:1}}'
+    #       - '{{resolve:ssm:/shared/internal-subnet-2:1}}'
+    #     VpcId: '{{resolve:ssm:/shared/vpc-id-default:1}}'
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: !Ref ComputeType
+        Image: !FindInMap [ImageMap, !Ref Runtime, Image]
+        EnvironmentVariables:
+          - Name: APP_PREFIX
+            Value: !Ref ApplicationPrefix
+          - Name: KEY_ID
+            Value: !Ref KMSKey
+          - Name: TEMPLATE
+            Value: !Ref Template
+          - Name: MANIFEST
+            Value: !Ref Manifest
+          - Name: ACCT_ID
+            Value: !Sub "${AWS::AccountId}"
+          - Name: ARN_PARTITION
+            Value: !Sub "${AWS::Partition}"
+          - Name: GIT_REPO
+            Value: !Select [4, !Split ["/", !Ref GitHubURL]]
+          - Name: CICD_BUCKET
+            Value: !Ref CICDBucket
+          - Name: PROD_BUILD_SPEC
+            Value: !Ref ProdBuildSpec
+          - Name: STAGE_NAME
+            Value: TODO
+          - Name: ACCOUNT_TYPE
+            Value: TODO
+          - Name: LANDING_ZONE
+            Value: TODO
+          - Name: TWO_FA_ACCESS_GROUP
+            Value: TODO
+        #   - Name: SNS_TOPIC_ARN
+        #     Value: TODO
+          - Name: SECURITY_GROUP_PARAMETER_NAME
+            Value: "TODO"
+        #   - Name: SSM_PARAM_ACCESSIBILITY
+        #     Value: "TODO"
+      TimeoutInMinutes: !Ref TimeoutInMinutes
