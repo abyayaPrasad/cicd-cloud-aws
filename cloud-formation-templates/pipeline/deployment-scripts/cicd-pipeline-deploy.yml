@@ -26,7 +26,7 @@ Parameters:
   KMSKey:
     Description: Key for the team. Secures their artifacts in S3 Bucket used for CICD.
     Type: String
-  BuildSpec:
+  NonProdBuildSpec:
     Description: Buildspec file to use for the nonprod codebuild pipeline.
     Type: String
   ComputeType:
@@ -135,7 +135,7 @@ Resources:
           - Name: CICD_BUCKET
             Value: !Ref PreProdCICDBucket
           - Name: PROD_BUILD_SPEC
-            Value: !Ref BuildSpec
+            Value: !Ref NonProdBuildSpec
           - Name: STAGE_NAME
             Value: TODO
           - Name: ACCOUNT_TYPE
