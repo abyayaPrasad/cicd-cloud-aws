@@ -51,9 +51,6 @@ Parameters:
   PreProdCICDBucket:
     Description: Identifies the account portion of the PREPROD cicd bucket. This value, plus '-${ApplicationPrefix}-cicd' is the cicd bucket.
     Type: String
-  ProdBuildSpec:
-    Description: Buildspec file to use for the prod codebuild pipeline.
-    Type: String
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
