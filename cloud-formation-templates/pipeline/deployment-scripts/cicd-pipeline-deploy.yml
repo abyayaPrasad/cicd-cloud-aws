@@ -21,7 +21,7 @@ Parameters:
   NotificationEmail:
     Description: Pipeline failure events will be published to an SNS topic.  Enter your the email/distribution list that is notified.
     Type: String
-    Default: @ge.com
+    Default: abyaya.hotta@wisseninfotech.com
     ConstraintDescription: Malformed input-Parameter NotificationEmail email address must end in "@ge.com".
   KMSKey:
     Description: Key for the team. Secures their artifacts in S3 Bucket used for CICD.
