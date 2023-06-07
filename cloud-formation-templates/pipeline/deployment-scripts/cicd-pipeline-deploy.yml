@@ -26,7 +26,7 @@ Parameters:
   KMSKey:
     Description: Key for the team. Secures their artifacts in S3 Bucket used for CICD.
     Type: String
-  NonProdBuildSpec:
+  BuildSpec:
     Description: Buildspec file to use for the nonprod codebuild pipeline.
     Type: String
   ComputeType:
@@ -48,7 +48,7 @@ Parameters:
   Manifest:
     Description: Requirements file name in your repository.
     Type: String
-  CICDBucket:
+  PreProdCICDBucket:
     Description: Identifies the account portion of the PREPROD cicd bucket. This value, plus '-${ApplicationPrefix}-cicd' is the cicd bucket.
     Type: String
   ProdBuildSpec:
@@ -136,9 +136,9 @@ Resources:
           - Name: GIT_REPO
             Value: !Select [4, !Split ["/", !Ref GitHubURL]]
           - Name: CICD_BUCKET
-            Value: !Ref CICDBucket
+            Value: !Ref PreProdCICDBucket
           - Name: PROD_BUILD_SPEC
-            Value: !Ref ProdBuildSpec
+            Value: !Ref BuildSpec
           - Name: STAGE_NAME
             Value: TODO
           - Name: ACCOUNT_TYPE
