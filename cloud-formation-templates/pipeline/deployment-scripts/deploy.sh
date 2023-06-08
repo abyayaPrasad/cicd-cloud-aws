@@ -4,7 +4,7 @@
 ApplicationName="sc-data-orch" #sc-data-orch-fed-developer
 GitRepo="cicd-cloud-aws" # Repo Name
 CICDTemplate="cicd-pipeline-deploy.yml" # resources CFT relative path from script location
-Region="us-east-1" # region
+Region="us-west-2" # region
 GitHubURL="https://github.com/abyayaPrasad/cicd-cloud-aws.git" # Github url
 KMSKey="" # KMS key arn - create KMS key add ARN here
 NonProdBuildSpec="./cloud-formation-templates/pipeline/deployment-scripts/builspec-nonprod.yml" # Buildspec file name
