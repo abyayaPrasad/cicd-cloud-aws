@@ -14,4 +14,4 @@ ProdCICDBucket="sc-data-orch-test-preprod"
 stage_name="dev"
 
 
-aws cloudformation deploy --no-verify-ssl --stack-name "${ApplicationName}-codebuild-promotion-${GitRepo}" --template-file ${CICDTemplate} --region ${Region} --role-arn arn:aws:iam::767400217432:role/sc-cloudformation-deploy-role --parameter-overrides GitHubURL=${GitHubURL} KMSKey=${KMSKey} NonProdBuildSpec=${NonProdBuildSpec} Template=${ResourceTemplate} PreProdCICDBucket=${PreProdCICDBucket} ProdCICDBucket=${ProdCICDBucket} FileS3Prefix=${ApplicationName}-${GitRepo} Manifest=${Manifest}
+aws cloudformation deploy --no-verify-ssl --stack-name "${ApplicationName}-codebuild-promotion-${GitRepo}" --template-file ${CICDTemplate} --region ${Region} --role-arn arn:aws:iam::767400217432:role/sc-cloudformation-deploy-role --parameter-overrides GitHubURL=${GitHubURL} KMSKey=${KMSKey} NonProdBuildSpec=${NonProdBuildSpec} Template=${ResourceTemplate} PreProdCICDBucket=${PreProdCICDBucket} ProdCICDBucket=${ProdCICDBucket} FileS3Prefix=${ApplicationName}-${GitRepo} ApplicationPrefix=${ApplicationName} Manifest=${Manifest}
