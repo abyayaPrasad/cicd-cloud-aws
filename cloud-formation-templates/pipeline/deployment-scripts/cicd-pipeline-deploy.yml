@@ -77,7 +77,7 @@ Resources:
   BuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
-      Name: !Join ["-", [!Sub '${ApplicationPrefix}', !Select [4, !Split ["/", !Ref GitHubURL]], "cicd-pipeline"]]
+      Name: !Join ["-", [!Sub '${ApplicationPrefix}', !Select [3, !Split ["/", !Ref GitHubURL]], "cicd-pipeline"]]
       Description: Codebuild project that builds, validates, tests and packages lambda function for CI/CD pipeline.
       Tags:
         - Key: uai
