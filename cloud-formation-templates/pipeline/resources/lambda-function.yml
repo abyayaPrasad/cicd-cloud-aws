@@ -39,7 +39,7 @@ Resources:
       FunctionName: "MyLambdaFunction1"
       Code: 
         S3Bucket: sc-data-orch-test-preprod
-        S3Key: sc-fn1-get-funcation-names.zip
+        S3Key: sc-fn1-get-function-names.zip
       Description: This lambda will query the redshift database
       Runtime: "python3.9"
       Handler: "lambda_function1.handler"
