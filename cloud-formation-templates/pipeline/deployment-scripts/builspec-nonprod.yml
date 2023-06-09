@@ -33,7 +33,7 @@ phases:
 
            aws s3 sync src/ s3://${CICD_BUCKET}/${APP_PREFIX}-${GIT_REPO}/${STAGE_NAME}/src/ --exclude "" #"file names that you dont want sync from s3"
 
-           sam deploy --region ${AWS_REGION} --stack-name ${APP_PREFIX}-${GIT_REPO}-${STAGE_NAME} --template-file ${GIT_REPO}.yaml --capabilities CAPABILITY_AUTO_EXPAND --role-arn arn:${ARN_PARTITION}:iam::${ACCT_ID}:role/av-${APP_PREFIX}-cloudformation-deployer --parameter-overrides GitRepo=${GIT_REPO} StageName=${STAGE_NAME} AccountType=${ACCOUNT_TYPE} LandingZone=${LANDING_ZONE} LogBucket=${LOGBUCKET} BootStrapScriptBucket=${CICD_BUCKET} BootStrapScriptPrefix=${APP_PREFIX}-${GIT_REPO}/${STAGE_NAME}/lambda-bootstrap BootStrapScriptName=${BOOTSTRAP_SCRIPT_NAME} --no-fail-on-empty-changeset
+           sam deploy --region ${AWS_REGION} --stack-name ${APP_PREFIX}-${GIT_REPO}-${STAGE_NAME} --template-file ${GIT_REPO}.yaml --capabilities CAPABILITY_AUTO_EXPAND --role-arn arn:${ARN_PARTITION}:iam::${ACCT_ID}:role/av-${APP_PREFIX}-cloudformation-deployer --parameter-overrides GitRepo=${GIT_REPO} StageName=${STAGE_NAME} AccountType=${ACCOUNT_TYPE} LandingZone=${LANDING_ZONE} LogBucket=${LOGBUCKET} --no-fail-on-empty-changeset
 
          elif [ "${STAGE_NAME}" = "prod" ]; then
            echo "copy files to prod folder"
