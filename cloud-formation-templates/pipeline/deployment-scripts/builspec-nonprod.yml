@@ -34,9 +34,10 @@ phases:
             aws s3 cp versioned.zip s3://${CICD_BUCKET}/${APP_PREFIX}-${GIT_REPO}/${STAGE_NAME}/versioned.zip --sse aws:kms --sse-kms-key-id ${KEY_ID}
             pwd
             cd lambda-functions/sc-dataorch-decisionflag-fn1-pre-get-results-functions/
-
+            pwd
             zip -r sc-fn1-get-function-names.zip lambda_function.py
-            aws s3 cp sc-fn1-get-funcation-names.zip s3://${CICD_BUCKET}/
+            ls -latrh
+            aws s3 cp ./sc-fn1-get-funcation-names.zip s3://${CICD_BUCKET}/
             cd ../..
             pwd
             #aws s3 sync src/ s3://${CICD_BUCKET}/${APP_PREFIX}-${GIT_REPO}/${STAGE_NAME}/src/ --exclude "" #"file names that you dont want sync from s3"
