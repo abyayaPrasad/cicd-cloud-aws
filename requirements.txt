@@ -1,0 +1,10 @@
+coverage 
+boto3 
+aws-lambda-powertools 
+pytest
+pytest-env
+pytest-mock
+moto
+pylint
+pandas
+pyyaml
