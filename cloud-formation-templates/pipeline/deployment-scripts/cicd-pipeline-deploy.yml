@@ -131,7 +131,7 @@ Resources:
           - Name: ARN_PARTITION
             Value: !Sub "${AWS::Partition}"
           - Name: GIT_REPO
-            Value: !Select [4, !Split ["/", !Ref GitHubURL]]
+            Value: !Select [3, !Split ["/", !Ref GitHubURL]]
           - Name: CICD_BUCKET
             Value: !Ref PreProdCICDBucket
           - Name: PROD_BUILD_SPEC
