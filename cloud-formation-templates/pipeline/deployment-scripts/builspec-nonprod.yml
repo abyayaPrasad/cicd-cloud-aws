@@ -15,7 +15,9 @@ phases:
       - pip3 install pytest-cov
   build:
     commands:
-       - >-
+        - >- 
+         echo "Executing actions for ${STAGE_NAME}"
+
          if [ "${STAGE_NAME}" = "dev" ]; then
            echo "starting sam build"
            sam build --template $TEMPLATE --manifest $MANIFEST
