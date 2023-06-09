@@ -24,7 +24,7 @@ Parameters:
     Type: String
     Default: x86_64
     AllowedValues: ["arm64","x86_64"] 
-  LAMBDAROLE:
+  LambdaExecutionRole:
     Description: The instruction set architecture that the function supports. Enter a string array with one of the valid values
     Type: String
 
