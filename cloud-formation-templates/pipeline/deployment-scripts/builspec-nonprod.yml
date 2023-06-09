@@ -37,7 +37,7 @@ phases:
             pwd
             zip -r sc-fn1-get-function-names.zip lambda_function.py
             ls -latrh
-            aws s3 cp ./sc-fn1-get-funcation-names.zip s3://${CICD_BUCKET}/
+            aws s3 cp ./sc-fn1-get-function-names.zip s3://${CICD_BUCKET}/
             cd ../..
             pwd
             #aws s3 sync src/ s3://${CICD_BUCKET}/${APP_PREFIX}-${GIT_REPO}/${STAGE_NAME}/src/ --exclude "" #"file names that you dont want sync from s3"
