@@ -37,7 +37,9 @@ Resources:
       Architectures: 
         - !Ref Architectures
       FunctionName: "MyLambdaFunction1"
-      CodeUri: s3://sc-data-orch-test-preprod/sc-fn1-get-funcation-names.zip
+      Code: 
+        S3Bucket: s3://sc-data-orch-test-preprod/
+        S3Key: sc-fn1-get-funcation-names.zip
       Description: This lambda will query the redshift database
       Runtime: "python3.9"
       Handler: "lambda_function1.handler"
