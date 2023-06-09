@@ -32,6 +32,9 @@ Parameters:
   StageName:
     Description: Buildspec file to use for the nonprod stagename.
     Type: String
+  LogBucket:
+    Description: Buildspec file to use for storing logs into the bucket.
+    Type: String
 
   ComputeType:
     Description: Codebuild environment compute type.
@@ -148,6 +151,8 @@ Resources:
             Value: TODO
           - Name: TWO_FA_ACCESS_GROUP
             Value: TODO
+          - Name: LOGBUCKET
+            Value: LogBucket
         #   - Name: SNS_TOPIC_ARN
         #     Value: TODO
           - Name: SECURITY_GROUP_PARAMETER_NAME
