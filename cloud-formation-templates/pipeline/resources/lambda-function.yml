@@ -44,4 +44,4 @@ Resources:
       MemorySize: !Ref MemorySize
       PackageType: !Ref PackageType
       Timeout: 60
-      Role: !GetAtt LambdaExecutionRole.Arn
+      Role: !Ref LambdaExecutionRole
