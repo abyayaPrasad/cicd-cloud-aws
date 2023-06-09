@@ -137,7 +137,7 @@ Resources:
           - Name: PROD_BUILD_SPEC
             Value: !Ref NonProdBuildSpec
           - Name: STAGE_NAME
-            Value: TODO
+            Value: !Ref StageName
           - Name: ACCOUNT_TYPE
             Value: TODO
           - Name: LANDING_ZONE
