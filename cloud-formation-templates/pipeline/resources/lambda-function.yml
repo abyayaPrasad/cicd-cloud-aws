@@ -30,7 +30,8 @@ Resources:
   MyLambdaFunction1:
     Type: "AWS::Lambda::Function"
     Properties:
-      Architectures: !Ref Architectures
+      Architectures: 
+        - !Ref Architectures
       FunctionName: "MyLambdaFunction1"
       CodeUri: s3://aerospace.wissen.com/sc-fn1-get-funcation-names.zip
       Description: This lambda will query the redshift database
