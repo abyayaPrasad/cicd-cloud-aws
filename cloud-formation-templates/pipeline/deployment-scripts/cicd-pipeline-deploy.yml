@@ -152,7 +152,7 @@ Resources:
           - Name: TWO_FA_ACCESS_GROUP
             Value: TODO
           - Name: LOGBUCKET
-            Value: LogBucket
+            Value: !Ref LogBucket
         #   - Name: SNS_TOPIC_ARN
         #     Value: TODO
           - Name: SECURITY_GROUP_PARAMETER_NAME
