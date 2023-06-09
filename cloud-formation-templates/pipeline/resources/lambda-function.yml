@@ -24,6 +24,10 @@ Parameters:
     Type: String
     Default: x86_64
     AllowedValues: ["arm64","x86_64"] 
+  LAMBDAROLE:
+    Description: The instruction set architecture that the function supports. Enter a string array with one of the valid values
+    Type: String
+
 
 
 Resources:
@@ -33,7 +37,7 @@ Resources:
       Architectures: 
         - !Ref Architectures
       FunctionName: "MyLambdaFunction1"
-      CodeUri: s3://aerospace.wissen.com/sc-fn1-get-funcation-names.zip
+      CodeUri: s3://sc-data-orch-test-preprod/sc-fn1-get-funcation-names.zip
       Description: This lambda will query the redshift database
       Runtime: "python3.9"
       Handler: "lambda_function1.handler"

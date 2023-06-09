@@ -35,6 +35,10 @@ Parameters:
   LogBucket:
     Description: Buildspec file to use for storing logs into the bucket.
     Type: String
+  LambdaRoleArn:
+    Description: Buildspec file to use for Lambda Execution role.
+    Type: String
+
 
   ComputeType:
     Description: Codebuild environment compute type.
@@ -153,6 +157,8 @@ Resources:
             Value: TODO
           - Name: LOGBUCKET
             Value: !Ref LogBucket
+          - Name: LAMBDAROLE
+            Value: !Ref LambdaRoleArn
         #   - Name: SNS_TOPIC_ARN
         #     Value: TODO
           - Name: SECURITY_GROUP_PARAMETER_NAME
