@@ -29,6 +29,10 @@ Parameters:
   NonProdBuildSpec:
     Description: Buildspec file to use for the nonprod codebuild pipeline.
     Type: String
+  StageName:
+    Description: Buildspec file to use for the nonprod stagename.
+    Type: String
+
   ComputeType:
     Description: Codebuild environment compute type.
     Type: String
