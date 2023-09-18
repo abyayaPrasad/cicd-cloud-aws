@@ -115,6 +115,7 @@ Resources:
         GitCloneDepth: 1
         ReportBuildStatus: true
         BuildSpec: !Ref NonProdBuildSpec
+      SourceVersion: !Sub 'infra-${pEnv}'
       Artifacts:
         Type: NO_ARTIFACTS
     #   VpcConfig:

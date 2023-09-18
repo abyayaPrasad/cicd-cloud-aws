@@ -38,12 +38,13 @@ Resources:
         - !Ref Architectures
       FunctionName: "MyLambdaFunction1"
       Code: 
-        S3Bucket: sc-data-orch-test-preprod
+        S3Bucket: sc-data-lambda-code
         S3Key: sc-fn1-get-function-names.zip
       Description: This lambda will query the redshift database
-      Runtime: "python3.9"
+      Runtime: !Ref Runtime
       Handler: "lambda_function1.handler"
       MemorySize: !Ref MemorySize
       PackageType: !Ref PackageType
       Timeout: 60
       Role: !Ref LambdaExecutionRole
+      KmsKeyArn : "arn:aws:kms:us-west-2:767400217432:key/372d5fd9-9f9b-413f-ac15-5323bf125931"

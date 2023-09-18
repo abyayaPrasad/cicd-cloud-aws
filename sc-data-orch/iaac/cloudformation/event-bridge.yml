@@ -1,0 +1,13 @@
+Resources:
+  SC-Data-Orch-Test:
+    Type: AWS::Events::Rule
+    Properties: 
+      Description: String
+      EventBusName: String
+      EventPattern: Json
+      Name: String
+      RoleArn: String
+      ScheduleExpression: String
+      State: String
+      Targets: 
+        - Target
